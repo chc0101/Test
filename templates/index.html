@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pose Estimation</title>
+    <style>
+        body {
+            background-color: #F5F5F5;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 0;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        header img {
+            height: 50px;
+            transition: transform 0.3s ease;
+            cursor: pointer; /* Add cursor pointer to indicate clickability */
+        }
+
+        header img:hover {
+            transform: scale(1.1);
+        }
+
+        .main-visual {
+            position: relative;
+            background-color: #E0E0E0;
+            max-width: 800px; 
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            margin-top: 80px; /* Adjusted to give more space for header */
+            margin-bottom: 10px;
+        }
+
+        .main-visual img {
+            width: 100%;
+            height: auto;
+            object-fit: cover; 
+            border-radius: 10px;
+        }
+
+        #controls {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #stopButton {
+            background-color: #ff4c4c;
+            color: white;
+        }
+
+        #restartButton {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="/static/logo.png" alt="Logo" onclick="window.open('https://sites.google.com/view/ite-team-function', '_blank')">
+</header>
+
+<div class="main-visual">
+    <img id="videoFeed" src="{{ url_for('video_feed') }}" alt="Video Feed">
+</div>
+
+<div id="controls">
+    <button id="stopButton">Stop Video</button>
+    <button id="restartButton">Restart Video</button>
+</div>
+
+<script>
+    const stopButton = document.getElementById('stopButton');
+    const restartButton = document.getElementById('restartButton');
+    const videoFeed = document.getElementById('videoFeed');
+    const baseURL = "{{ url_for('video_feed') }}";
+
+    let isVideoStopped = false;
+
+    stopButton.addEventListener('click', function() {
+        if (!isVideoStopped) {
+            videoFeed.src = ''; 
+            isVideoStopped = true;
+        }
+    });
+
+    restartButton.addEventListener('click', function() {
+        if (isVideoStopped) {
+            videoFeed.src = baseURL; 
+            isVideoStopped = false;
+        }
+    });
+
+    videoFeed.onerror = function() {
+        alert('An error occurred while loading the video feed.');
+    };
+</script>
+
+</body>
+</html>
