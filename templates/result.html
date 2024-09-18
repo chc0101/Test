@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .grade-result {
+            color: red;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .grade-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .grade-table th, .grade-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .grade-table th {
+            background-color: #f4f4f4;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .grade-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .grade-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1>Your Workout Result</h1>
+            <p>You have achieved a grade of: <span class="grade-result">{{ grade_result }}</span></p>
+
+            <h2>Grade Criteria</h2>
+            <table class="grade-table">
+                <thead>
+                    <tr>
+                        <th>Grade</th>
+                        <th>Reps Criteria</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>상</td>
+                        <td>15 reps or more</td>
+                    </tr>
+                    <tr>
+                        <td>중</td>
+                        <td>10 reps to 14 reps</td>
+                    </tr>
+                    <tr>
+                        <td>하</td>
+                        <td>Less than 10 reps</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <a href="{{ url_for('index') }}" class="button">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

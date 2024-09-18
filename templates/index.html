@@ -3,134 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pose Estimation</title>
+    <title>Exercise Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
-        body {
-            background-color: #F5F5F5;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+        .mode-buttons {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            min-height: 100vh;
-            color: #333;
+            justify-content: space-around;
+            margin-top: 10px; 
+            margin-bottom: 20px; 
         }
-
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 10px 0;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        header img {
-            height: 50px;
-            transition: transform 0.3s ease;
-            cursor: pointer; /* Add cursor pointer to indicate clickability */
-        }
-
-        header img:hover {
-            transform: scale(1.1);
-        }
-
-        .main-visual {
-            position: relative;
-            background-color: #E0E0E0;
-            max-width: 800px; 
-            width: 100%;
-            height: auto;
-            overflow: hidden;
-            margin-top: 80px; /* Adjusted to give more space for header */
-            margin-bottom: 10px;
-        }
-
-        .main-visual img {
-            width: 100%;
-            height: auto;
-            object-fit: cover; 
-            border-radius: 10px;
-        }
-
-        #controls {
-            margin-top: 10px;
-            display: flex;
-            justify-content: center;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 5px;
-            border: none;
-            border-radius: 5px;
+        .mode-button {
+            width: 100%; 
+            padding: 12px 24px; 
+            font-size: 16px; 
             cursor: pointer;
-        }
-
-        #stopButton {
-            background-color: #ff4c4c;
+            text-align: center;
+            background-color: #28a745;
             color: white;
+            border: none;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+            margin: 5px; 
         }
-
-        #restartButton {
-            background-color: #4CAF50;
-            color: white;
+        .mode-button:hover {
+            background-color: #218838;
         }
-
-        button:hover {
-            opacity: 0.8;
+        .mode-button.selected {
+            background-color: #007bff;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="content">
+            <h1>Welcome to the Exercise Tracker</h1>
+            {% if video_feed %}
+                <div class="video-container">
+                    <h2>Get Ready to Start!</h2>
+                    <img src="{{ url_for('video_feed') }}" alt="Video Feed" class="video-feed">
+                    <a href="{{ url_for('finished') }}" class="button">Finish Workout</a>
+                </div>
+            {% else %}
+                <form action="/" method="post" class="form">
+                    <input type="text" name="name" placeholder="Enter Your Name" required>
 
-<header>
-    <img src="/static/logo.png" alt="Logo" onclick="window.open('https://sites.google.com/view/ite-team-function', '_blank')">
-</header>
+                    <select name="grade" required>
+                        <option value="" disabled selected>Select Your Grade</option>
+                        <option value="1학년">1학년</option>
+                        <option value="2학년">2학년</option>
+                        <option value="3학년">3학년</option>
+                    </select>
 
-<div class="main-visual">
-    <img id="videoFeed" src="{{ url_for('video_feed') }}" alt="Video Feed">
-</div>
+                    <input type="text" name="student_id" placeholder="Enter Your Student ID" required>
 
-<div id="controls">
-    <button id="stopButton">Stop Video</button>
-    <button id="restartButton">Restart Video</button>
-</div>
+                    <select name="department" required>
+                        <option value="" disabled selected>Select Your Department</option>
+                        <option value="인공지능전자과">인공지능전자과</option>
+                        <option value="전자제어과">전자제어과</option>
+                        <option value="정보통신과">정보통신과</option>
+                        <option value="전자회로과">전자회로과</option>
+                    </select>
 
-<script>
-    const stopButton = document.getElementById('stopButton');
-    const restartButton = document.getElementById('restartButton');
-    const videoFeed = document.getElementById('videoFeed');
-    const baseURL = "{{ url_for('video_feed') }}";
+                    <div class="mode-buttons">
+                        <button type="button" class="mode-button" onclick="selectMode('competitive')">경쟁 모드</button>
+                        <button type="button" class="mode-button" onclick="selectMode('individual')">개인 측정 모드</button>
+                    </div>
 
-    let isVideoStopped = false;
+                    <input type="hidden" name="mode" id="mode-input" required>
 
-    stopButton.addEventListener('click', function() {
-        if (!isVideoStopped) {
-            videoFeed.src = ''; 
-            isVideoStopped = true;
+                    <button type="submit" class="button">Start Workout</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function selectMode(mode) {
+            document.getElementById('mode-input').value = mode;
+            document.querySelectorAll('.mode-button').forEach(button => {
+                button.classList.remove('selected');
+            });
+            document.querySelector(`[onclick="selectMode('${mode}')"]`).classList.add('selected');
         }
-    });
-
-    restartButton.addEventListener('click', function() {
-        if (isVideoStopped) {
-            videoFeed.src = baseURL; 
-            isVideoStopped = false;
-        }
-    });
-
-    videoFeed.onerror = function() {
-        alert('An error occurred while loading the video feed.');
-    };
-</script>
-
+    </script>
 </body>
 </html>
